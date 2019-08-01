@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DividerRight } from "./Dividers";
+import { DividerRight } from "../lib";
 import { UserBadge } from "./UserBadge";
 
 import "./styles.css";
