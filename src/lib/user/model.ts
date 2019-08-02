@@ -6,4 +6,4 @@ export type UserModel = {
   logged: User;
 };
 
-export const initialUser = { username: undefined };
+export const initialUser = { username: "guest" };

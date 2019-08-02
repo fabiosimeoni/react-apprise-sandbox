@@ -1,9 +1,10 @@
-import { UserModel, initialUser } from "../user";
+import { UserModel } from "../user";
 
-export type BaseModel = UserModel & {};
+export type BaseModel = UserModel & { loading: boolean };
 
 export const initialModel = {
-  logged: initialUser
+  logged: undefined,
+  loading: false
 };
 
 var _state: State = {

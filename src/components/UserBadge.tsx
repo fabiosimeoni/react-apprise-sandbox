@@ -1,10 +1,9 @@
 import * as React from "react";
-import { useAppState } from "../lib/state";
+import { State, connect } from "../lib/state";
 
-export const UserBadge = () => {
-  const state = useAppState();
-
-  return (
+export const Compo = (state:State) => 
     <div className="userBadge">Welcome: {state.model.logged.username}</div>
-  );
-};
+  
+
+
+export const UserBadge = connect(Compo, model => model.logged )

@@ -1,4 +1,5 @@
 import { state } from "../state";
+import { User } from "./model";
 //import { initialUser } from "./model";
 
 const login = () => {
@@ -7,7 +8,22 @@ const login = () => {
     model.logged.username = name;
   });
 };
+ 
+const isLogged = () => {
+  return state().model.logged !== undefined;
+};
 
-const fetchLogged = () => Promise.resolve({ username: "Romeo" });
+const fetchLogged: ()=> Promise<User> = ()=> {
+  
+  return Promise.resolve({ username: "Romeo" }).then( wait<User>(1000));
 
-export const api = { login, fetchLogged };
+
+}
+
+function wait<T>(ms:any) {
+  return function(x:T) {
+    return new Promise<T>(resolve => setTimeout(() => resolve(x), ms));
+  };
+}
+
+export const api = { login, isLogged, fetchLogged };
