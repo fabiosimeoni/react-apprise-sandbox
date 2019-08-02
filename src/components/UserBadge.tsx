@@ -1,8 +1,8 @@
 import * as React from "react";
-import { State, connect } from "../lib/state";
+import { connect, BaseState } from "../lib/state";
 
-export const Compo = (state:State) => 
-    <div className="userBadge">Welcome: {state.model.logged.username}</div>
+export const Compo = (state:BaseState) => 
+    <div className="userBadge">Welcome: {state.logged.username}</div>
   
 
 

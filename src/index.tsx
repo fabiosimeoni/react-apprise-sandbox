@@ -3,6 +3,6 @@ import { render } from "react-dom";
 
 import { App } from "./lib/components";
 import { Main } from "./components/Main";
-import { initialModel } from "./state";
+import { initialBaseState } from "./state";
 
-render(<App model={initialModel} main={Main} />, document.getElementById("root"));
+render(<App model={initialBaseState} main={Main} />, document.getElementById("root"));

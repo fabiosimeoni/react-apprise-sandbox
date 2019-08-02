@@ -2,8 +2,6 @@ export type User = {
   username: String;
 };
 
-export type UserModel = {
+export type UserState = {
   logged: User;
 };
-
-export const initialUser = { username: "guest" };

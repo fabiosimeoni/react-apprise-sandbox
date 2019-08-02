@@ -2,8 +2,8 @@ import * as React from "react";
 
 import "./styles.css";
 
-import { State, StateProvider, useCreateState } from "../state";
-import { api } from "../user";
+import { StateProvider, useCreateState } from "../state";
+import { api as userapi } from "../user";
 import { Login } from "./Login";
 import { Spinner } from "./Spinner";
 import { ErrorBoundary } from "./ErrorBoundary";
@@ -12,39 +12,39 @@ import { ErrorBoundary } from "./ErrorBoundary";
 export const App = (props) => {
   
   //  initialise app state
-  const state: State = useCreateState(props.model); 
-
+  const state = useCreateState(props.model); 
+  const api = userapi(state);
   
   // load loogged user
   React.useEffect(() => {
+
     if (!api.isLogged()) {
-      state.model.loading = true;
+      state.loading = true;
       api.fetchLogged().then(u =>
-        state.set(model => {
-          model.logged = u;
-          model.loading = false;
+        state.set(s => {
+          s.logged = u;
+          s.loading = false;
         })
       );
   }})
 
-  const loading = state.model.loading || !api.isLogged()
+  const loading = state.loading || !api.isLogged()
 
   return (
    
   <div className="App">
   
-  
-  <StateProvider value={state} >
-    <ErrorBoundary>
-      <Spinner when={loading} >
-          <Login />
-            <div className="App">
-              <props.main />
-            </div>
-            <button onClick={api.login}>Login</button>
-      </Spinner>  
-    </ErrorBoundary>
-  </StateProvider>
+      <ErrorBoundary>
+        <StateProvider value={state} >
+            <Spinner when={loading} >
+                <Login />
+                  <div className="App">
+                    <props.main />
+                  </div>
+                  <button onClick={api.login}>Login</button>
+            </Spinner>  
+        </StateProvider>
+      </ErrorBoundary>
 
      </div>
   )

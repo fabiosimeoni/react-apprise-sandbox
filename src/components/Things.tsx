@@ -1,8 +1,8 @@
 import * as React from "react";
-import { connect, State } from "../lib";
+import { connect, BaseState } from "../lib";
 import { api } from "../thing";
 
-const $Things = (state:State) => {
+const $Things = (state:BaseState) => {
 
   const things = api(state);
 
@@ -11,7 +11,4 @@ const $Things = (state:State) => {
   return <div>{things.all().length === 0 ? "NoThing." : things.all().map((t,i) => <div key={i}>{t.name}</div>)}</div>;
 };
 
-export const Things = connect(
-  $Things,
-  (model, state) => api(state).all()
-);
+export const Things = connect( $Things, state => api(state).all() );

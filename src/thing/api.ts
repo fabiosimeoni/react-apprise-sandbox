@@ -1,21 +1,21 @@
 import { Thing, randomThing } from "./model";
-import { BaseModel, State } from "../lib";
+import { BaseState } from "../lib";
 import { AppModel } from "../state";
 
-const cast = (model: BaseModel) => model as AppModel;
+const cast = (state: BaseState) => state as AppModel;
 
-const all = (state: State) => () => {
-  return cast(state.model).things;
+const all = (state: BaseState) => () => {
+  return cast(state).things;
 };
-const addRandom = (state: State) => () => {
+const addRandom = (state: BaseState) => () => {
   add(state)(randomThing());
 };
 
-const add = (state: State) => (t: Thing) => {
-  state.set(model => cast(model).things.push(t));
+const add = (state: BaseState) => (t: Thing) => {
+  state.set(state => cast(state).things.push(t));
 };
 
-export const api = (s: State) => ({
+export const api = (s: BaseState) => ({
   add: add(s),
   addRandom: addRandom(s),
   all: all(s)

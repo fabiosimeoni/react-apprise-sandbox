@@ -1,19 +1,18 @@
-import { state } from "../state";
+import { BaseState } from "../state";
 import { User } from "./model";
-//import { initialUser } from "./model";
 
-const login = () => {
-  state().set(model => {
-    const name = model.logged.username ? "Pino" + Math.floor(Math.random() * 10).toString() : "Pino";
-    model.logged.username = name;
+const login = (state:BaseState) => () => {
+  state.set(draft => {
+    const name = draft.logged.username ? "Pino" + Math.floor(Math.random() * 10).toString() : "Pino";
+    draft.logged.username = name;
   });
 };
  
-const isLogged = () => {
-  return state().model.logged !== undefined;
+const isLogged = (state:BaseState) => () => {
+  return state.logged !== undefined;
 };
 
-const fetchLogged: ()=> Promise<User> = ()=> {
+const fetchLogged = (state:BaseState) => () : Promise<User> => {
   
   return Promise.resolve({ username: "Romeo" }).then( wait<User>(1000));
 
@@ -26,4 +25,8 @@ function wait<T>(ms:any) {
   };
 }
 
-export const api = { login, isLogged, fetchLogged };
+export const api = (s: BaseState) => ({
+  login: login(s),
+  isLogged: isLogged(s),
+  fetchLogged: fetchLogged(s)
+});

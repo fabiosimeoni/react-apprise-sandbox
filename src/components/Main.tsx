@@ -3,11 +3,11 @@ import { DividerRight } from "../lib";
 import { UserBadge } from "./UserBadge";
 
 import "./styles.css";
-import { State, connect } from "../lib/state";
+import { connect, BaseModel } from "../lib/state";
 import { Things } from "./Things";
 import { api } from "../thing";
 
-const $Main = (state:State) => {
+const $Main = (state:BaseModel) => {
 
   return (
     <div className="main">
@@ -15,7 +15,7 @@ const $Main = (state:State) => {
         <UserBadge />
       </DividerRight>
       <h1>Hello Apprise</h1>
-      <span>Welcome, {state.model.logged.username}</span>
+      <span>Welcome, {state.logged.username}</span>
       <div>
         <button onClick={api(state).addRandom}>Add a thing</button>
       </div>

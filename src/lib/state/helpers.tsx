@@ -1,20 +1,26 @@
 import * as React from "react";
-import { State, state, BaseModel } from "./model";
+import { BaseState } from "./model";
 import produce from "immer";
 
-const StateContext = React.createContext<State>(null);
+const StateContext = React.createContext<BaseState>(null);
 
 //  custom name for the Provider
 export const StateProvider = StateContext.Provider;
 
-export const useCreateState = (initialModel: BaseModel) => {
-  const initial: State = state();
+export const useCreateState = (initialState: BaseState) : BaseState => {
+  
+  const [state, set] = React.useState(initialState);
 
-  const [model, updater] = React.useState(initialModel);
-  initial.model = model;
-  initial.set = fun => updater(produce(data => void fun(data)));
+  const handler = {   
+    get : (target, key) =>  
+          key === 'set' ?  
+                (...args) => set(produce((draft)=>void(args[0](draft)))) :  
+                target[key]
+     
+  }
 
-  return initial;
+  //return state;
+  return new Proxy(state,handler);
 };
 
 
@@ -23,29 +29,29 @@ export const useCreateState = (initialModel: BaseModel) => {
 
 //  clients use connect() to wrap the compoment, but connect(9 delegates the a <Stateful> component that can use Hooks. 
 
-type depfactory =  (data: BaseModel, s?: State) => any
+type depfactory =  (state: BaseState) => any
 
-export const connect = (Compo: (props: State) => JSX.Element, factories?: depfactory|depfactory[]) => {
+export const connect = (Compo: (props: BaseState) => JSX.Element, factories?: depfactory|depfactory[]) => {
 
-  factories = factories || [model=>model] //  no arg: re-renders on each state change  (typical for containers)
+  factories = factories || [s=>s] //  no arg: re-renders on each state change  (typical for containers)
   
   let deps = factories instanceof Array ? factories : [factories] // singleton: syncs with a particular piece of stage (tyopical for leaves)
 
   // by naming the wrapper we get better debugging 
   const connected = (props) => Stateful(props,Compo, deps);
-  
+
   return connected;
 };
 
 
 
-const Stateful = (props: State,Compo: (props:State) => JSX.Element, factories?: depfactory[]) => {
+const Stateful = (props: BaseState,Compo: (props:BaseState) => JSX.Element, factories?: depfactory[]) => {
   
   // pull state from Context
-  const state = React.useContext<State>(StateContext);
+  const state = React.useContext<BaseState>(StateContext);
 
   // gather change specifications as paths into the state
-  let deps = factories.map(f=>f(state.model,state));
+  let deps = factories.map(f=>f(state));
 
   //  memoises the rendering of the origiinal component, conditionally to change speifications.
   return React.useMemo(() => <Compo  {...props} {...state} />, 
