@@ -1,11 +1,11 @@
 import * as React from "react";
 import { connect } from "../lib";
-import { api } from "../thing";
+import { thingapi } from "../thing";
 import { State } from "../state";
 
 const $Things = (state:State) => {
 
-  const things = api(state);
+  const things = thingapi(state);
 
   console.log("rending things");
 

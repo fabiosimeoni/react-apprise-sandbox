@@ -26,7 +26,7 @@ function wait<T>(ms:any) {
   };
 }
 
-export const api = (s: BaseState) => ({
+export const userapi = (s: BaseState) => ({
   login: login(s),
   isLogged: isLogged(s),
   fetchLogged: fetchLogged(s)

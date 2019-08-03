@@ -13,7 +13,7 @@ const add = (state: State) => (t: Thing) => {
   change(state).with(draft => draft.things.push(t));
 };
 
-export const api = (s: State) => ({
+export const thingapi = (s: State) => ({
   add: add(s),
   addRandom: addRandom(s),
   all: all(s)

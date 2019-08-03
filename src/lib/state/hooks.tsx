@@ -11,9 +11,9 @@ export const useLoadingEffect = (state: BaseState, unless: ()=>boolean, task:()=
            return
       baseapi(state).setLoading(true)
       task().then( value => { 
-          baseapi(state).setLoading(false); 
-          return value;
-      })
-      .catch( value =>baseapi(state).setLoading(false))
-  },);
+                baseapi(state).setLoading(false); 
+                return value;
+            })
+            .catch( value =>baseapi(state).setLoading(false))
+  });
 }
