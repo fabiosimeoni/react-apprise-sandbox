@@ -12,10 +12,11 @@ const isLogged = (state:BaseState) => () => {
   return state.logged !== undefined;
 };
 
-const fetchLogged = (state:BaseState) => () : Promise<User> => {
+const fetchLogged = (state:BaseState) => () : Promise<void> => {
   
-  return Promise.resolve({ username: "Romeo" }).then( wait<User>(200));
-
+  return Promise.resolve({ username: "Romeo" })
+              .then( wait<User>(200))
+              .then(u => change(state).with( s => { s.logged = u;}))
 
 }
 

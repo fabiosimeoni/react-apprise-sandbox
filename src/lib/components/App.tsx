@@ -2,7 +2,7 @@ import * as React from "react";
 
 import "./styles.css";
 
-import { StateProvider, useCreateState, BaseState, change } from "../state";
+import { StateProvider, useCreateState, BaseState, change, useLoadingEffect } from "../state";
 import { api as userapi } from "../user";
 import { Login } from "./Login";
 import { Spinner } from "./Spinner";
@@ -21,17 +21,7 @@ export const App = (props:Props) => {
   const api = userapi(state);
   
   // load loogged user
-  React.useEffect(() => {
-
-    if (!api.isLogged()) {
-      state.loading = true;
-      api.fetchLogged().then(u => 
-        change(state).with( s => {
-          s.logged = u;
-          s.loading = false;
-        })
-      );
-  }})
+  useLoadingEffect( state, api.isLogged, () => api.fetchLogged() ) 
 
   const loading = state.loading || !api.isLogged()
 
