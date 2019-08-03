@@ -53,4 +53,4 @@ export const App = (props:Props) => {
 
      </div>
   )
-};
+}
