@@ -3,7 +3,9 @@ import { BaseState } from "./model";
 import { baseapi } from "./api";
 
 
-export const useLoadingEffect = (state: BaseState, unless: ()=>boolean, task:()=>Promise<any>) => {
+
+//  manageses loadng state on behalf of a task
+export const useLoadingEffect = ({state,unless,task}: loadDirectives ) => {
 
   React.useEffect( () => {
       
@@ -16,4 +18,15 @@ export const useLoadingEffect = (state: BaseState, unless: ()=>boolean, task:()=
             })
             .catch( value =>baseapi(state).setLoading(false))
   });
+}
+
+
+
+
+
+export type loadDirectives = {
+
+  state : BaseState,
+  unless: () => boolean,
+  task: () => Promise<any>
 }

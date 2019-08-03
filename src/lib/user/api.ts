@@ -1,5 +1,6 @@
 import { BaseState, change } from "../state";
 import { User } from "./model";
+import { wait } from "../utils";
 
 const login = (state:BaseState) => () => {
   change(state).with( draft => {
@@ -15,16 +16,11 @@ const isLogged = (state:BaseState) => () => {
 const fetchLogged = (state:BaseState) => () : Promise<void> => {
   
   return Promise.resolve({ username: "Romeo" })
-              .then( wait<User>(200))
+              .then(wait<User>(200))
               .then(u => change(state).with( s => { s.logged = u;}))
 
 }
 
-function wait<T>(ms:any) {
-  return function(x:T) {
-    return new Promise<T>(resolve => setTimeout(() => resolve(x), ms));
-  };
-}
 
 export const userapi = (s: BaseState) => ({
   login: login(s),

@@ -20,10 +20,10 @@ export const App = (props:Props) => {
   const state = useCreateState(props.initState); 
   const api = userapi(state);
   
-  // load loogged user
-  useLoadingEffect( state, api.isLogged, () => api.fetchLogged() ) 
-
-  const loading = state.loading || !api.isLogged()
+  // load logged user, if requried
+  useLoadingEffect( { state, 
+                      unless:api.isLogged, 
+                    task:() => api.fetchLogged()} ) 
 
   return (
    
@@ -31,7 +31,7 @@ export const App = (props:Props) => {
   
       <ErrorBoundary>
         <StateProvider value={state} >
-            <Spinner when={loading} >
+            <Spinner showOn={state.loading} renderIf={api.isLogged} >
                 <Login />
                   <div className="App">
                     <props.main />

@@ -1,8 +1,16 @@
 import * as React from "react";
+import { ValOrGen, utils } from "../utils"
 
 
-export const Spinner = (props : {when:boolean,children:any}) => {
+export const Spinner = (props : {showOn: ValOrGen<boolean>, renderIf: ValOrGen<boolean>, children:any}) => {
 
 
-  return props.when ? <span>Loading...</span> : <div> {props.children} </div>;
+  const show = utils.asGenerator(props.showOn)
+  const render = utils.asGenerator(props.renderIf) 
+
+  return show() ? 
+                    <span>Loading...</span> : 
+                    render() ? 
+                        <div>{props.children}</div> : 
+                        null;
 };
