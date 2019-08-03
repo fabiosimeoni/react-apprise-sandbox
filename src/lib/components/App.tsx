@@ -8,6 +8,8 @@ import { Login } from "./Login";
 import { Spinner } from "./Spinner";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { configapi } from "../config";
+import { DialogBox } from "./DialogBox"
+import { dialogapi, randomDialog } from "../dialog";
 
 type Props = {
   initState:BaseState, 
@@ -21,12 +23,13 @@ export const App = (props:Props) => {
 
   const users = userapi(state);
   const config = configapi(state);
+  const dialog = dialogapi(state);
 
   const ready = users.isLogged() || config.isDefined();
   
   useLoadingEffect( { state, 
                         unless: ready, 
-                      task:() => config.fetch().then(users.fetchLogged) } ) 
+                      task:() => config.fetch().then(users.fetchLogged)} ) 
 
   return (
    
@@ -40,9 +43,11 @@ export const App = (props:Props) => {
                     <props.main />
                   </div>
                   <button onClick={()=>users.set(randomUser())}>Login</button>
+                  <button onClick={()=>dialog.open(randomDialog) }>Open Dialog</button>
                   <br />
                   <span className="Status">{state.config && "config loaded"}</span>
-            </Spinner>  
+            </Spinner> 
+            <DialogBox /> 
         </StateProvider>
       </ErrorBoundary>
 
