@@ -1,3 +1,10 @@
 .App {
   font-family: sans-serif;
 }
+
+.Status {
+  font-size: 80%;
+  overflow: hidden;
+  position: fixed;
+  bottom: 10px;
+}

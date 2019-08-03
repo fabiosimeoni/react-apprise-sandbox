@@ -1,7 +1,8 @@
 import { UserState } from "../user";
+import { ConfigState } from "../config";
 
 
-export type BaseState =  UserState & MiscState;
+export type BaseState =  UserState & MiscState & ConfigState;
 
 type MiscState = {
 
@@ -11,7 +12,8 @@ type MiscState = {
 export const initialBase : BaseState = {
   
   logged: undefined,
-  loading: false
+  loading: false,
+  config: undefined
 
 }
 

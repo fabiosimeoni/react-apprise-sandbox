@@ -7,6 +7,7 @@ import { userapi } from "../user";
 import { Login } from "./Login";
 import { Spinner } from "./Spinner";
 import { ErrorBoundary } from "./ErrorBoundary";
+import { configapi } from "../config";
 
 type Props = {
   initState:BaseState, 
@@ -16,14 +17,16 @@ type Props = {
 // HOC to boostrap and uniformly style an application
 export const App = (props:Props) => {
   
-  //  initialise app state
   const state = useCreateState(props.initState); 
-  const api = userapi(state);
+
+  const users = userapi(state);
+  const config = configapi(state);
+
+  const ready = users.isLogged() || config.isDefined();
   
-  // load logged user, if requried
   useLoadingEffect( { state, 
-                      unless:api.isLogged, 
-                    task:() => api.fetchLogged()} ) 
+                        unless: ready, 
+                      task:() => config.fetch().then(users.fetchLogged) } ) 
 
   return (
    
@@ -31,12 +34,14 @@ export const App = (props:Props) => {
   
       <ErrorBoundary>
         <StateProvider value={state} >
-            <Spinner showOn={state.loading} renderIf={api.isLogged} >
+            <Spinner showOn={state.loading} renderIf={ready} >
                 <Login />
                   <div className="App">
                     <props.main />
                   </div>
-                  <button onClick={api.login}>Login</button>
+                  <button onClick={users.login}>Login</button>
+                  <br />
+                  <span className="Status">{state.config && "config loaded"}</span>
             </Spinner>  
         </StateProvider>
       </ErrorBoundary>

@@ -1,6 +1,6 @@
 import { BaseState, change } from "../state";
-import { User } from "./model";
-import { wait } from "../utils";
+import { User, mockUser } from "./model";
+import { utils } from "../utils";
 
 const login = (state:BaseState) => () => {
   change(state).with( draft => {
@@ -15,8 +15,9 @@ const isLogged = (state:BaseState) => () => {
 
 const fetchLogged = (state:BaseState) => () : Promise<void> => {
   
-  return Promise.resolve({ username: "Romeo" })
-              .then(wait<User>(200))
+  console.log("fetching logged user...")
+  return Promise.resolve(mockUser)
+              .then(utils.wait<User>(200))
               .then(u => change(state).with( s => { s.logged = u;}))
 
 }
