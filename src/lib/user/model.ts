@@ -1,3 +1,5 @@
+import { utils } from "../utils";
+
 export type User = {
   username: String;
 };
@@ -6,4 +8,6 @@ export type UserState = {
   logged: User;
 };
 
-export const mockUser : User = { username : "Romeo" }
+export const randomUser = () : User => 
+  ({ username : utils.random("user") } )
+    

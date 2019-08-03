@@ -3,7 +3,7 @@ import * as React from "react";
 import "./styles.css";
 
 import { StateProvider, useCreateState, BaseState, useLoadingEffect } from "../state";
-import { userapi } from "../user";
+import { userapi, randomUser } from "../user";
 import { Login } from "./Login";
 import { Spinner } from "./Spinner";
 import { ErrorBoundary } from "./ErrorBoundary";
@@ -39,7 +39,7 @@ export const App = (props:Props) => {
                   <div className="App">
                     <props.main />
                   </div>
-                  <button onClick={users.login}>Login</button>
+                  <button onClick={()=>users.set(randomUser())}>Login</button>
                   <br />
                   <span className="Status">{state.config && "config loaded"}</span>
             </Spinner>  
