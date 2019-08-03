@@ -1,8 +1,8 @@
-import { BaseState } from "../state";
+import { BaseState, change } from "../state";
 import { User } from "./model";
 
 const login = (state:BaseState) => () => {
-  state.set(draft => {
+  change(state).with( draft => {
     const name = draft.logged.username ? "Pino" + Math.floor(Math.random() * 10).toString() : "Pino";
     draft.logged.username = name;
   });
@@ -14,7 +14,7 @@ const isLogged = (state:BaseState) => () => {
 
 const fetchLogged = (state:BaseState) => () : Promise<User> => {
   
-  return Promise.resolve({ username: "Romeo" }).then( wait<User>(1000));
+  return Promise.resolve({ username: "Romeo" }).then( wait<User>(200));
 
 
 }

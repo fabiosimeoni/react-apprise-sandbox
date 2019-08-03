@@ -1,17 +1,17 @@
 import { UserState } from "../user";
 
-export type BaseState = { 
 
-  set?: (fun: (draft: BaseState) => any) => void;
+export type BaseState =  UserState & MiscState;
+
+type MiscState = {
+
   loading: boolean 
+}
 
-} 
-
-& UserState;
-
-export const initialBase: BaseState = {
-
+export const initialBase : BaseState = {
+  
   logged: undefined,
   loading: false
-};
+
+}
 

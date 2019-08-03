@@ -1,6 +1,6 @@
 import { BaseState, initialBase } from "../lib";
-import { ThingModel, initialThings } from "../thing/model";
+import { ThingState, initialThings } from "../thing/model";
 
-export type AppModel = BaseState & ThingModel;
+export type State = BaseState & ThingState;
 
-export const initialBaseState = { ...initialBase, ...initialThings };
+export const initialState : State = { ...initialBase, ...initialThings };

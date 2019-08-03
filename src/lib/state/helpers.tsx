@@ -2,59 +2,71 @@ import * as React from "react";
 import { BaseState } from "./model";
 import produce from "immer";
 
+//  the React context that manages state propagation
 const StateContext = React.createContext<BaseState>(null);
 
-//  custom name for the Provider
+//  the React Provider that holds the state
 export const StateProvider = StateContext.Provider;
 
-export const useCreateState = (initialState: BaseState) : BaseState => {
-  
-  const [state, set] = React.useState(initialState);
 
-  const handler = {   
-    get : (target, key) =>  
-          key === 'set' ?  
-                (...args) => set(produce((draft)=>void(args[0](draft)))) :  
-                target[key]
-     
+//  ----------    state handling
+
+//  custom hook that stores the state (intended for root compo <App>)
+export const useCreateState = <S extends BaseState>(initialState: S) : S => {
+  
+  const [state, update] = React.useState(initialState);
+
+  //  cannot store this in state directly, as it's read-only, write-protected.
+  //  keep it instead as a global, which enables  better typing too.
+  updater = fun => update( produce(draft => void( fun(draft)) ))
+
+  return state;
+};
+
+//  holds the draft mutating function
+let updater: (fun:Updater<BaseState>) =>void;
+
+//  used by clients to change state. 
+//  delegates to React-based updater using fluent and type-friendly API.
+export const change = <S extends BaseState> (s:S) => ({ with:(u:Updater<S>) => updater(u) })
+
+
+
+//    ------    state injection  
+
+//  connects any Component to the global state, injecting it as props. 
+//  pptionally, instructs re-renders only when specific parts of the state change.
+export const connect = <S extends BaseState>(Component: (props?: S) => JSX.Element, specs?: DepSpec<S> | DepSpec<S> []) => {
+
+  //  no specs? re-renders on each state change
+  specs = specs || [s=>s] 
+  
+  //  one spec? normalise into singleton array
+  let normalisedspecs = specs instanceof Array ? specs : [specs] 
+
+  // return connected wrapper, but names it first for better debugging in stack traces 
+  const Connected = (props?) => {
+
+      // pull state from Context
+      const state = React.useContext(StateContext);
+
+      // gather change specifications as paths into the state
+      let deps = normalisedspecs.map(f=>f(state as S));
+
+      //  memoises the rendering of the origiinal component, conditionally to change speifications.
+      return React.useMemo(() => <Component  {...props} {...state} />, 
+      // eslint-disable-next-line
+      deps);
   }
 
-  //return state;
-  return new Proxy(state,handler);
+  return Connected;
 };
 
 
+//  --------  helpers
 
-//  injects global state into a component as props, specifying when to refresh the component.
+// the internal type of the draft-mutating function.
+type Updater<S extends BaseState> = (s:S)=>void
 
-//  clients use connect() to wrap the compoment, but connect(9 delegates the a <Stateful> component that can use Hooks. 
-
-type depfactory =  (state: BaseState) => any
-
-export const connect = (Compo: (props: BaseState) => JSX.Element, factories?: depfactory|depfactory[]) => {
-
-  factories = factories || [s=>s] //  no arg: re-renders on each state change  (typical for containers)
-  
-  let deps = factories instanceof Array ? factories : [factories] // singleton: syncs with a particular piece of stage (tyopical for leaves)
-
-  // by naming the wrapper we get better debugging 
-  const connected = (props) => Stateful(props,Compo, deps);
-
-  return connected;
-};
-
-
-
-const Stateful = (props: BaseState,Compo: (props:BaseState) => JSX.Element, factories?: depfactory[]) => {
-  
-  // pull state from Context
-  const state = React.useContext<BaseState>(StateContext);
-
-  // gather change specifications as paths into the state
-  let deps = factories.map(f=>f(state));
-
-  //  memoises the rendering of the origiinal component, conditionally to change speifications.
-  return React.useMemo(() => <Compo  {...props} {...state} />, 
-    // eslint-disable-next-line
-    deps);
-};
+// the internal type of a dependency specification
+type DepSpec<T extends BaseState> =  (state: T) => any
