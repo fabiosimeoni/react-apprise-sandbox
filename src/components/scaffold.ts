@@ -1,4 +1,3 @@
-import * as React from "react"
 
 import { ScaffoldModel } from "../lib"
 import { Things } from "./Things";
@@ -10,12 +9,14 @@ export const scaffold : ScaffoldModel = {
     { name:"Home",
       icon:"home", 
       title: "Home",
-      content: <Home />
+      route:"/",
+      content: Home
     },
     { name:"Things",
       icon:"pie-chart", 
       title: "Many Things",
-      content: <Things />
+      route:"/things/",
+      content: Things
     }
   
   ]

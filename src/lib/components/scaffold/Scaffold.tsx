@@ -8,6 +8,7 @@ import { Layout, Menu, Icon } from "antd"
 import { ScaffoldModel } from "./model";
 import { connect, BaseState } from "../../state";
 import { Login } from "../Login";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom"
 
 type Props = BaseState & {
 
@@ -21,15 +22,19 @@ const $Scaffold = (props: Props ) => {
   const { Sider, Content, Header } = Layout
 
 
-  return <div style={{ textAlign: "center" }}>
-      <Layout style={{ minHeight: '100vh' }}>
+  return <Router>
+        <Layout style={{ textAlign: "center", minHeight: '100vh' }}>
         <Sider collapsible defaultCollapsed={true}>
           <Menu theme="dark" mode="inline">
             { model.sections.map ((section,i) => 
-              <Menu.Item key={i}>{}
-                <Icon type={section.icon} />
-                <span>{section.name}</span>
-              </Menu.Item>
+              
+                <Menu.Item key={i}>
+                  <Link to={section.route}>
+                    <Icon type={section.icon} />
+                    <span>{section.name}</span>
+                  </Link>
+                </Menu.Item>
+             
             )}
           </Menu>
         </Sider>
@@ -38,12 +43,15 @@ const $Scaffold = (props: Props ) => {
           <Login />     
         </Header>
           <Content style={{ padding: 24, background: '#fff'}}>
-            {model.sections.map( (section,i) => <div key={i}>{section.content}</div>) }
+               {model.sections.map( (section,i) => 
+
+                <Route exact path={section.route} key={i} component={section.content} />
+              )}
           </Content>
       </Layout>
     </Layout>
-     
-  </div>
+  </Router>
+
 }
 
 export const Scaffold = connect($Scaffold)

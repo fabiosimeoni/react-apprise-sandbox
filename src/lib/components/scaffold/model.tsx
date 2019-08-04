@@ -1,3 +1,4 @@
+import { ReactElement, ReactComponentElement, ReactNode } from "react";
 
 
 
@@ -13,5 +14,6 @@ export type SectionModel = {
     name: string
     icon:string
     title:string
-    content: JSX.Element
+    route: string
+    content: ReactNode
 }
