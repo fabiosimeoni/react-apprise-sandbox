@@ -8,7 +8,8 @@ import { scaffold } from "./components/scaffold"
 
 render(<App initState={initialState}>
     <Scaffold model={scaffold}>
-      <Main />
+      {/* to remove, model will instruct scaffold.  */}
+      <Main /> 
     </Scaffold>
   </App>
 , document.getElementById("root"));
