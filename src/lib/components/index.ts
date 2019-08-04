@@ -1,4 +1,5 @@
 export * from "./App";
 export * from "./Login";
-export * from "./dividers";
 export * from "./ErrorBoundary";
+
+export * from "./scaffold";
