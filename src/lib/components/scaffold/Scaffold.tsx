@@ -1,10 +1,12 @@
 
 import * as React from "react"
+
+import 'antd/dist/antd.css';
+import './styles.css'
+
+import { Layout, Menu, Icon } from "antd"
 import { ScaffoldModel } from "./model";
 import { connect, BaseState } from "../../state";
-import { userapi } from "../../user";
-import { dialogapi, randomDialog } from "../../dialog";
-import { randomUser } from "../../user";
 import { Login } from "../Login";
 
 type Props = BaseState & {
@@ -15,19 +17,32 @@ type Props = BaseState & {
 
 const $Scaffold = (props: Props ) => {
   
-  const users = userapi(props);
-  const dialog = dialogapi(props);
+  const { model } = props
+  const { Sider, Content, Header } = Layout
+
 
   return <div style={{ textAlign: "center" }}>
-      <Login />        
-      <h1>Hello Apprise</h1>
-      <br/>
-      { (props as any).children }
-      <br/>
-      <button onClick={()=>users.set(randomUser())}>Login</button>
-              <button onClick={()=>dialog.open(randomDialog) }>Open Dialog</button>
-              <br />
-              <span className="Status">{props.config && "config loaded"}</span>
+      <Layout style={{ minHeight: '100vh' }}>
+        <Sider collapsible defaultCollapsed={true}>
+          <Menu theme="dark" mode="inline">
+            { model.sections.map ((section,i) => 
+              <Menu.Item key={i}>{}
+                <Icon type={section.icon} />
+                <span>{section.name}</span>
+              </Menu.Item>
+            )}
+          </Menu>
+        </Sider>
+         <Layout>
+        <Header style={{ background: '#fff', padding: 0 }} >
+          <Login />     
+        </Header>
+          <Content style={{ padding: 24, background: '#fff'}}>
+            {model.sections.map( (section,i) => <div key={i}>{section.content}</div>) }
+          </Content>
+      </Layout>
+    </Layout>
+     
   </div>
 }
 

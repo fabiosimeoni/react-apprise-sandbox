@@ -3,13 +3,15 @@
 
 export type ScaffoldModel = {
 
-    title : String
+    title : string
     sections: SectionModel[]
 
 }
 
 export type SectionModel = {
 
-    name: String
-    title:String
+    name: string
+    icon:string
+    title:string
+    content: JSX.Element
 }
