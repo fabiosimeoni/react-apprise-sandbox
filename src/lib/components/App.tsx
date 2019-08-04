@@ -13,7 +13,7 @@ import { dialogapi, randomDialog } from "../dialog";
 
 type Props = {
   initState:BaseState, 
-  main: () => JSX.Element 
+  children: React.ReactElement
 }
 
 // HOC to boostrap and uniformly style an application
@@ -38,14 +38,14 @@ export const App = (props:Props) => {
       <ErrorBoundary>
         <StateProvider value={state} >
             <Spinner showOn={state.loading} renderIf={ready} >
-                <Login />
-                  <div className="App">
-                    <props.main />
-                  </div>
-                  <button onClick={()=>users.set(randomUser())}>Login</button>
-                  <button onClick={()=>dialog.open(randomDialog) }>Open Dialog</button>
-                  <br />
-                  <span className="Status">{state.config && "config loaded"}</span>
+              <Login />
+              <div className="App">
+                {props.children}
+              </div>
+              <button onClick={()=>users.set(randomUser())}>Login</button>
+              <button onClick={()=>dialog.open(randomDialog) }>Open Dialog</button>
+              <br />
+              <span className="Status">{state.config && "config loaded"}</span>
             </Spinner> 
             <DialogBox /> 
         </StateProvider>

@@ -5,4 +5,7 @@ import { App } from "./lib/components";
 import { Main } from "./components/Main";
 import { initialState } from "./state";
 
-render(<App initState={initialState} main={Main} />, document.getElementById("root"));
+render(<App initState={initialState}>
+    <Main />
+  </App>
+, document.getElementById("root"));
