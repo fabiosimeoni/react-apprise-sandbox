@@ -8,7 +8,7 @@ import { Layout, Menu, Icon } from "antd"
 import { ScaffoldModel } from "./model";
 import { connect, BaseState } from "../../state";
 import { Login } from "../Login";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom"
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 
 type Props = BaseState & {
 
@@ -29,7 +29,7 @@ const $Scaffold = (props: Props ) => {
             { model.sections.map ((section,i) => 
               
                 <Menu.Item key={i}>
-                  <Link to={section.route}>
+                  <Link to={section.route.path}>
                     <Icon type={section.icon} />
                     <span>{section.name}</span>
                   </Link>
@@ -43,10 +43,13 @@ const $Scaffold = (props: Props ) => {
           <Login />     
         </Header>
           <Content style={{ padding: 24, background: '#fff'}}>
-               {model.sections.map( (section,i) => 
+                <Switch>
+                {model.sections.map( (s,i) => 
 
-                <Route exact path={section.route} key={i} component={section.content} />
+                <Route exact={s.route.exact} path={s.route.path} key={i} component={s.content} />
               )}
+                 <Route render={()=><span>what?</span>} />
+              </Switch>
           </Content>
       </Layout>
     </Layout>

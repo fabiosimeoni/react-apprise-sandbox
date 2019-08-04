@@ -9,13 +9,13 @@ export const scaffold : ScaffoldModel = {
     { name:"Home",
       icon:"home", 
       title: "Home",
-      route:"/",
+      route:{path:"/", exact:true},
       content: Home
     },
     { name:"Things",
       icon:"pie-chart", 
       title: "Many Things",
-      route:"/things/",
+      route:{path:"/things/",exact:false},
       content: Things
     }
   
