@@ -1,9 +1,9 @@
 import { UserState } from "../user";
 import { ConfigState } from "../config";
-import { DialogState } from "../dialog"
+import { BoxState } from "../box"
 
 
-export type BaseState =  UserState & MiscState & ConfigState & DialogState
+export type BaseState =  UserState & MiscState & ConfigState & BoxState
 
 type MiscState = {
 
@@ -13,7 +13,7 @@ type MiscState = {
 
 export const initialBase : BaseState = {
   
-  dialog: undefined,
+  box: undefined,
   logged: undefined,
   loading: false,
   config: undefined

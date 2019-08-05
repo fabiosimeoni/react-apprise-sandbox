@@ -1,5 +1,6 @@
 import * as React from "react";
 import { ValOrGen, utils } from "../utils"
+import { Spin } from "antd";
 
 
 export const Spinner = (props : {showOn: ValOrGen<boolean>, renderIf: ValOrGen<boolean>, children:any}) => {
@@ -9,7 +10,7 @@ export const Spinner = (props : {showOn: ValOrGen<boolean>, renderIf: ValOrGen<b
   const render = utils.asGenerator(props.renderIf) 
 
   return show() ? 
-                    <span>Loading...</span> : 
+                    <Spin size="large" />: 
                     render() ? 
                         <div>{props.children}</div> : 
                         null;

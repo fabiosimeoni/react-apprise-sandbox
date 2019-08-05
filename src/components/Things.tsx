@@ -31,6 +31,7 @@ const AllThings = (props:Props) => {
         
             <Link key={i} to={props.match.url+"/"+t.name } >
                  <div >{t.name}</div>
+
             </Link>
             
         )}

@@ -7,7 +7,7 @@ import { userapi } from "../user";
 import { Spinner } from "./Spinner";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { configapi } from "../config";
-import { DialogBox } from "./DialogBox"
+import { Box } from "./feedback/Box"
 
 type Props = {
   initState:BaseState, 
@@ -39,7 +39,7 @@ export const App = (props:Props) => {
                 {props.children}
               </div>
             </Spinner> 
-            <DialogBox /> 
+            <Box /> 
         </StateProvider>
       </ErrorBoundary>
 
