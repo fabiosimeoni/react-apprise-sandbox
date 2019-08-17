@@ -1,12 +1,17 @@
 import { BaseState } from "./model";
 import { change } from "./helpers";
+import { intlapi, Language } from "../intl";
 
-
-const setLoading = (state:BaseState) => (v:boolean) =>{
-  change(state).with(s=>s.loading=v)
-}
 
 export const baseapi = (s:BaseState) => ({
 
-  setLoading: setLoading(s)
+  language: () => s.language,
+
+  setLanguage: (l:Language) => {
+
+    intlapi.givenState(s).getModel().changeLanguage(l)
+    change(s).with(draft=>draft.language=l)
+  
+  }
+  
 })

@@ -28,7 +28,7 @@ let updater: (fun:Updater<BaseState>) =>void;
 
 //  used by clients to change state. 
 //  delegates to React-based updater using fluent and type-friendly API.
-export const change = <S extends BaseState> (s:S) => ({ with:(u:Updater<S>) => updater(u) })
+export const change = <S extends BaseState> (s:S) => ({ with: (u: Updater<S>) => updater(u) })
 
 
 

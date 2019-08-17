@@ -1,12 +1,20 @@
+import { IntlConfig } from "../intl";
 
-export type Config = {
-  sampleproperty: string
+
+export enum Mode { dev="dev", prod="prod"}
+
+export type BaseConfig = IntlConfig & {
+  mode: Mode
+  services: { [key: string]:ServiceConfig }
 }
 
 export type ConfigState = {
-  config:Config
+  config:BaseConfig
 }
 
-export const mockConfig : Config = {
-  sampleproperty:"samplevalue"
+export type ServiceConfig = {
+
+  prefix: string
+  default?: boolean
+
 }

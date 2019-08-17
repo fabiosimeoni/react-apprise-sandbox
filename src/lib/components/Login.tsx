@@ -3,11 +3,10 @@ import { connect, BaseState } from "../state";
 import { Avatar } from "antd";
 
 const $Login = (state: BaseState) => {
-  console.log("rendering login");
   return <div>
             <Avatar size="small" icon="user" />
             <span style={{padding:5}}> {state.logged.username}</span>
           </div>;
 };
 
-export const Login = connect($Login, state=> state.logged );
+export const Login = connect( $Login, state => state.logged );

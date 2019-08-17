@@ -1,6 +1,18 @@
-import { Thing, randomThing } from "./model";
+import { callapi, change, through } from "../lib";
 import { State } from "../state";
-import { change } from "../lib";
+import { randomThing, Thing } from "./model";
+
+
+const fetch = (state: State) => () : Promise<Thing[]> => {
+
+  console.log("fetching things...")
+  return callapi(state).at("/thing").get().then(through(set(state)))
+};
+
+const set = (state: State) => (things:Thing[]) => {
+
+  change(state).with(draft=> draft.things=things );
+}
 
 const all = (state: State) => () => {
   return state.things;
@@ -14,6 +26,10 @@ const add = (state: State) => (t: Thing) => {
 };
 
 export const thingapi = (s: State) => ({
+
+  fetch: fetch(s),
+
+  set: set(s),
   add: add(s),
   addRandom: addRandom(s),
   all: all(s)

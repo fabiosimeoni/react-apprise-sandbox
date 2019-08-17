@@ -1,6 +1,6 @@
+import { callapi } from "../api";
 import { BaseState, change } from "../state";
-import { User, randomUser } from "./model";
-import { utils } from "../utils";
+import { User } from "./model";
 
 const set = (state:BaseState) => (user : User) => change(state).with(draft => draft.logged=user)
  
@@ -8,10 +8,12 @@ const isLogged = (state:BaseState) => () => {
   return state.logged !== undefined;
 };
 
-const fetchLogged = (state:BaseState) => () : Promise<void> => {
+const fetchLogged = (state:BaseState) => ()  => {
   
   console.log("fetching logged user...")
-  return Promise.resolve(randomUser()).then(utils.wait<User>(200)).then(set(state))
+
+  return callapi(state).at("/logged").get<User>().then(set(state))
+
 }
 
 

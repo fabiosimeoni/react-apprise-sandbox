@@ -1,29 +1,90 @@
-import { BaseState, change } from "../state"
-import { Config } from "./model";
-import axios from "axios"
-import { notification } from "antd";
+import { callapi } from "../api";
+import { BaseState, change } from "../state";
+import { failWith, through } from "../utils";
+import { BaseConfig, ServiceConfig } from "./model";
 
-const get = (state:BaseState) => () => state.config
-const set = (state:BaseState) => (c: Config) => change(state).with( s => s.config = c )
+const getModel = (state:BaseState) => () => state.config || failWith("no configuration available yet")
+const setModel = (state:BaseState) => (c: BaseConfig) => change(state).with( s => s.config = c )
 
 const isDefined = (state:BaseState) => () => state.config !== undefined
 
-const configPath="config.json"
 
-const fetch = (state:BaseState) => () => {
+
+const fetch = (state:BaseState) => (): Promise<BaseConfig> => {
 
   console.log("loading configuration...")
-  return axios.get<Config>(configPath)
-             .then(r=> { set(state)(r.data); return r.data})
-             .then(c=>notification['success']({
-    message: `Loaded configuration (${c.sampleproperty})`
-  }))
+
+   return callapi(state).staticAt("config.json").get()
+                      .then(through(validate))
+                      .then(through(setModel(state)))
+
 }
 
-export const configapi = (s: BaseState ) => ({
+
+
+
+const validate = (config:BaseConfig) => {
+
+  try {
+    config.services || failWith("no services defined")
+
+
+  }
+  catch(e) {
+    failWith(`configuration is invalid: ${e}.`)
+  }
+}
+
+
+export const service = ({services}:BaseConfig) => (name:string) => {
+
+  const service = services[name]
+  
+  if (!service) 
+    throw new Error(`unknown service '${name}'`);
+
+  return service;
+}
+
+export const defaultService = ({services}:BaseConfig) => () : ServiceConfig => {
+  
+  for (let k in services)
+    if (services[k].default)
+      return services[k]
+  
+
+  const keys = Object.keys(services)
+
+  if (keys.length === 1)
+    return services[keys[0]]
+  
+  throw new Error("no default service!"); 
+
+}
+
+const stateapi = (s: BaseState ) => ({
 
   isDefined: isDefined(s),
-  get : get(s),
+  getModel : getModel(s),
+  get: () => modelapi(getModel(s)()),
+  set: setModel(s),
   fetch: fetch(s)
-  
-}) 
+
+})
+
+const modelapi =  (c:BaseConfig) => ({
+
+  service: service(c),
+  defaultService: defaultService(c),
+
+  intl: () => c.intl
+})
+
+export type ConfigStateApi = typeof stateapi
+export type ConfigModelApi = typeof modelapi
+
+export const configapi = {
+
+  givenState : stateapi,
+  givenModel: modelapi
+}

@@ -5,6 +5,8 @@ import { ReactNode } from "react";
 export type ScaffoldModel = {
 
     title : string
+    icon: string 
+    color: string
     sections: SectionModel[]
 
 }
@@ -16,4 +18,5 @@ export type SectionModel = {
     title:string
     route: { path: string, exact: boolean};
     content: ReactNode
+    sidebar: ReactNode
 }

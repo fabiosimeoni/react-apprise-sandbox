@@ -1,13 +1,13 @@
-import { utils } from "../lib/utils";
+import { random } from "../lib/utils";
 
 export type Thing = {
   name: String;
 };
 
 export type ThingState = {
-  things: Thing[];
+  things: Thing[] | undefined;
 };
 
-export const initialThings: ThingState = { things: [] };
+export const initialThings: ThingState = { things: undefined };
 
-export const randomThing = () => ({ name: utils.random("thing") });
+export const randomThing = () => ({ name: random("thing") });

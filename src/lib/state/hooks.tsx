@@ -1,36 +1,39 @@
-import * as React from "react"
-import { BaseState } from "./model";
-import { baseapi } from "./api";
-import { ValOrGen, utils } from "../utils";
-
+import * as React from "react";
+import { showError } from "../utils";
 
 
 //  manageses loadng state on behalf of a task
-export const useLoadingEffect = ({state,unless,description,task}: loadDirectives ) => {
+export const useLoadingEffect = ({unless=false,when=true,task,error}: loadDirectives ) => {
 
+  const [loading,setLoading] = React.useState(false);
+  const [failed,setFailed] = React.useState(false);
+
+  // eslint-disable-next-line
   React.useEffect( () => {
-      
-      if (utils.asGenerator(unless)())
+    
+    if (loading || failed || unless || !when ) 
            return
-      
-      state.loading = true;
-      
-      task().then( value => { 
-                baseapi(state).setLoading(false); 
-                return value;
-            })
-            .catch( value =>baseapi(state).setLoading(false))
+
+    
+     Promise.resolve(setLoading(true))
+           .then( task )
+           .catch(e=> {
+              showError(e,{title:error, okText:"Retry", onClose: close=> { setFailed(false); close() }})
+              setFailed(true);
+           })
+           .then(()=>setLoading(false))
+        
   });
+
+  return loading;
 }
-
-
 
 
 
 export type loadDirectives = {
 
-  state : BaseState,
-  unless: ValOrGen<boolean>,
-  description?: String,
+  unless?: boolean,
+  when?: boolean,
+  error: string,
   task: () => Promise<any>
 }

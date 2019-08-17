@@ -1,22 +1,19 @@
 import { UserState } from "../user";
 import { ConfigState } from "../config";
-import { BoxState } from "../box"
+import { Language, IntlState } from "../intl"
 
+export type BaseState =  UserState & ConfigState & IntlState & {
 
-export type BaseState =  UserState & MiscState & ConfigState & BoxState
-
-type MiscState = {
-
-  loading: boolean 
+  language: Language
 
 }
 
 export const initialBase : BaseState = {
   
-  box: undefined,
   logged: undefined,
-  loading: false,
-  config: undefined
+  language: Language.en,
+  config: undefined,
+  intl:undefined
 
 }
 

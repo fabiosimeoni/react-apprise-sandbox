@@ -1,4 +1,5 @@
-import { utils } from "../utils";
+import { random } from "../utils";
+
 
 export type User = {
   username: String;
@@ -9,5 +10,5 @@ export type UserState = {
 };
 
 export const randomUser = () : User => 
-  ({ username : utils.random("user") } )
+  ({ username : random("user") } )
     
